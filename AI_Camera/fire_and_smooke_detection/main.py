@@ -10,3 +10,6 @@ class FireSmookeDetection(BaseModule):
     def detect_fire_and_smooke(self, batch):
         dets = self.detector.do_detect(batch)
         return dets
+    
+    def __call__(self, batch):
+        return self.detect_fire_and_smooke(batch)

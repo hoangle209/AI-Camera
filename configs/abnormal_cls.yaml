@@ -1,0 +1,26 @@
+detection:
+  model  : "yolov8"
+  weight : "weights/yolov8s.pt"
+  imgsz  : [736,1280]
+  conf   : 0.45
+  classes: [0,]
+  verbose: False
+  device : "cpu"
+  kwargs : null 
+
+
+track:
+  model: "byte_track"
+  kwargs:
+    frame_rate: 30
+    track_thresh: 0.25
+    track_buffer: 20
+    match_thresh: 0.7 # higher match thresh means more objects are matched
+    mot20: False
+
+
+abnormal:
+  min_person: 1.4
+  min_grad: 2
+  live: 5
+  min_ab_frames: 3

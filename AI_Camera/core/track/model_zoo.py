@@ -14,9 +14,9 @@ def do_track_byte_track(
     """
     if dets is None:
         dets = np.concatenate([
-                            xyxy, 
-                            confidence[..., None],
-                            class_id[..., None]], axis=1)
+                        xyxy, 
+                        confidence[..., None],
+                        class_id[..., None]], axis=1)
     tracked_stracks = byte_tracker.update(dets)
 
     xyxy     = np.array([STrack.tlwh_to_tlbr(strack.tlwh) for strack in tracked_stracks]).astype("int")

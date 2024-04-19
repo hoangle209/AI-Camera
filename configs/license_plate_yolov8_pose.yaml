@@ -1,0 +1,20 @@
+detection:
+  model  : "yolov8"
+  weight : "weights/license_plate_v8_pose.pt"
+  imgsz  : [640,640]
+  conf   : 0.6
+  classes: [0]
+  verbose: False
+  device : "cpu"
+  kwargs : null 
+
+OCR:
+  model : "paddle"
+  rec:
+    weight: "./model_ocr/best_model_4_4"
+    rec_image_shape: "3, 48, 320"
+    rec_char_dict_path: "./model_ocr/licence_plate_dict.txt"
+  threshold: 0.9
+  MODE_REC: True
+  MODE_DET: True
+  MODE_SYS: False

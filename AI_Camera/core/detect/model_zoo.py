@@ -19,7 +19,12 @@ def do_detect_yolov8(
                         classes=classes, 
                         verbose=verbose, 
                         device=device, )   
+    
     results = [pred.boxes.data.cpu().numpy() for pred in v8_preds]
+    if v8_preds[0].keypoints is not None:
+        keypoints = [pred.keypoints.data.cpu().numpy() for pred in v8_preds]
+        results = (results, keypoints)
+
     return results
 
 

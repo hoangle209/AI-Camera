@@ -36,6 +36,7 @@ class ViewTransformer:
 
 class SpeedEstimation(BaseModule):
     fps = 30
+    
     def __init__(self, config) -> None:
         super().__init__(config)
 
@@ -69,6 +70,9 @@ class SpeedEstimation(BaseModule):
                 labels.append(f"#{t_id} {int(speed)} km/h")
 
         return tracklets, labels
-        
+    
+
+    def __call__(self, frame):
+        return self.estimate_speed(frame)
 
     
