@@ -22,7 +22,7 @@ if __name__ == "__main__":
     #     print(tracklets)
     #     print("- labels", labels)
 
-    im = cv2.imread("gettyimages-1403633842-612x612.jpg")
+    im = cv2.imread("imgpsh_fullsize_anim.jpg")
     lc = LicensePlatePoseDetection("configs/license_plate_yolov8_pose.yaml")
-    r = lc.detect_pose_license_plate([im, im])
+    r = lc.detect_license_plate_and_ocr([im])
     print(r)

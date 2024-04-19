@@ -39,8 +39,8 @@ class LicensePlatePoseDetection(BaseModule):
         if self.MODE_REC:
             self.text_recognizer = TextRecognizer(self.args)
 
-        if self.MODE_DET:
-            self.text_detector = TextDetector(self.args)
+        # if self.MODE_DET:
+        #     self.text_detector = TextDetector(self.args)
     
 
     def find_intersection(self, line1, line2):
@@ -162,8 +162,8 @@ class LicensePlatePoseDetection(BaseModule):
                 if txt_result == None:
                     continue
 
-            if self.MODE_DET:
-                dt_boxes, _ = self.text_detector(img)
+            # if self.MODE_DET:
+            #     dt_boxes, _ = self.text_detector(img)
             
             count_plate += 1
             results.append([id, txt_result, [x1, y1, x2, y2], [], [], []])
