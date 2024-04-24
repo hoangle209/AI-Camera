@@ -47,6 +47,7 @@ class SpeedEstimation(BaseModule):
         self.coordinates = defaultdict(lambda: deque(maxlen=self.fps))
 
     def estimate_speed(self, frame):
+        speed = {}
         labels = []
         dets = self.detector.do_detect(frame)[0]
         tracklets = self.tracker.do_track(dets=dets)
@@ -57,10 +58,11 @@ class SpeedEstimation(BaseModule):
         points = self.view_transformer.transform_points(points=bottom_center_points).astype(int)
         track_id = tracklets[:, -1]
 
-        for t_id, (_, y) in zip(track_id, points):
+        for t_id, (_, y), tracklet in zip(track_id, points, tracklets):
             self.coordinates[t_id].append(y)
             if len(self.coordinates[t_id]) < self.fps / 2:
                 labels.append(f"#{t_id}")
+                speed[f"{t_id}"] = (tracklet[:4], -1)
             else:
                 coordinate_start = self.coordinates[t_id][-1]
                 coordinate_end = self.coordinates[t_id][0]
@@ -68,8 +70,9 @@ class SpeedEstimation(BaseModule):
                 time = len(self.coordinates[t_id]) / self.fps
                 speed = distance / time * 3.6
                 labels.append(f"#{t_id} {int(speed)} km/h")
+                speed[f"{t_id}"] = (tracklet[:4], int(speed))
 
-        return tracklets, labels
+        return tracklets, labels, speed
     
 
     def __call__(self, frame):
