@@ -1,9 +1,9 @@
 detection:
   model  : "yolov5"
-  weight : "weights/yolov8s.pt"
+  weight : "weights/fire_and_smoke.pt"
   imgsz  : [640,640]
-  conf   : 0.25
-  classes: [0, 1]
+  conf   : 0.65
+  classes: [0,1]
   verbose: False
   device : "cpu"
   kwargs : null 

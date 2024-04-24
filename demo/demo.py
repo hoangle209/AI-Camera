@@ -3,26 +3,33 @@ import sys
 sys.path.insert(1, ".")
 
 import cv2 
+import matplotlib.pyplot as plt 
 from AI_Camera.speed_estimation.main import SpeedEstimation
-from AI_Camera.license_plate.main import LicensePlatePoseDetection
+# from AI_Camera.license_plate.main import LicensePlatePoseDetection
+from AI_Camera.coco_det.main import COCODetection
+from AI_Camera.abnormal.main import Abnormal
+from AI_Camera.fire_and_smoke_detection.main import FireSmokeDetection
+from AI_Camera.ai_lost.main import AILost
 
 if __name__ == "__main__":
-    # speed = SpeedEstimation("configs/yolov8_bytetrack.yaml")
+    ai_lost = AILost("configs/ai_lost_items.yaml")
+    cap = cv2.VideoCapture("rtsp://admin:admin123@192.168.6.203:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif")
+    writer = cv2.VideoWriter("test.avi", 
+                             cv2.VideoWriter_fourcc(*'MJPG'), 
+                             30, (1920,1080))
 
-    # cap = cv2.VideoCapture("video/video_1681116180_1681116480.mp4")
-
-    # c = 0
-    # while True:
-    #     suc, frame = cap.read()
-
-    #     if not suc:
-    #         break
+    while True:
+        suc, frame = cap.read()
+        if not suc:
+            break
         
-    #     tracklets, labels = speed.estimate_speed(frame)
-    #     print(tracklets)
-    #     print("- labels", labels)
+        dets = ai_lost(frame)[0]
+        
 
-    im = cv2.imread("imgpsh_fullsize_anim.jpg")
-    lc = LicensePlatePoseDetection("configs/license_plate_yolov8_pose.yaml")
-    r = lc.detect_license_plate_and_ocr([im])
-    print(r)
+
+        # cv2.imshow("f", frame)
+        # if cv2.waitKey(1) & 0xff == 27:
+        #     break
+    
+    cv2.destroyAllWindows()
+

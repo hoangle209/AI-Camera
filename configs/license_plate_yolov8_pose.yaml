@@ -11,9 +11,9 @@ detection:
 OCR:
   model : "paddle"
   rec:
-    rec_model_dir: "weights/best_model_4_4"
+    rec_model_dir: "weights/license_plate/best_model_4_4"
     rec_image_shape: "3, 48, 320"
-    rec_char_dict_path: "weights/licence_plate_dict.txt"
+    rec_char_dict_path: "weights/license_plate/licence_plate_dict.txt"
   threshold: 0.9
   MODE_REC: True
   MODE_DET: True

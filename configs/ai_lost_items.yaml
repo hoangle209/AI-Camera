@@ -1,0 +1,27 @@
+detection:
+  model  : "yolov8"
+  weight : "weights/yolov8s.pt"
+  imgsz  : [640,640]
+  conf   : 0.45
+  classes: [0,25,26,29,68,74]
+  verbose: False
+  device : "cpu"
+  kwargs : null 
+
+
+track:
+  model: "byte_track"
+  kwargs:
+    frame_rate: 30
+    track_thresh: 0.25
+    track_buffer: 20
+    match_thresh: 0.7 # higher match thresh means more objects are matched
+    mot20: False
+
+
+checker:
+  track_history_len: 10
+  is_not_moving_checker_len: 60 # frames
+  is_moving_threshold: 5
+
+  
