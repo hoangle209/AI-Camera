@@ -52,6 +52,9 @@ class SpeedEstimation(BaseModule):
         dets = self.detector.do_detect(frame)[0]
         tracklets = self.tracker.do_track(dets=dets)
 
+        if tracklets.shape[0] == 0:
+            return np.array([]), [], {}
+
         bottom_center_points = np.concatenate(
                                 [(tracklets[:, 0:1] + tracklets[:, 2:3]) / 2,
                                  tracklets[:, 3:4]], axis=1)

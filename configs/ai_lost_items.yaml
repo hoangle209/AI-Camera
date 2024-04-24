@@ -1,11 +1,11 @@
 detection:
   model  : "yolov8"
-  weight : "weights/yolov8s.pt"
+  weight : "weights\\yolov8l.pt"
   imgsz  : [640,640]
-  conf   : 0.45
-  classes: [0,25,26,29,68,74]
+  conf   : 0.25
+  classes: [0,24,25,26,28,67]
   verbose: False
-  device : "cpu"
+  device : "cuda"
   kwargs : null 
 
 
@@ -21,7 +21,7 @@ track:
 
 checker:
   track_history_len: 10
-  is_not_moving_checker_len: 60 # frames
+  is_not_moving_checker_len: 30 # frames
   is_moving_threshold: 5
 
   

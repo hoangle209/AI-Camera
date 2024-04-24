@@ -19,6 +19,9 @@ def do_track_byte_track(
                         class_id[..., None]], axis=1)
     tracked_stracks = byte_tracker.update(dets)
 
+    if len(tracked_stracks) == 0:
+        return np.array([])
+
     xyxy     = np.array([STrack.tlwh_to_tlbr(strack.tlwh) for strack in tracked_stracks]).astype("int")
     score    = np.array([strack.score for strack in tracked_stracks])[:, None]
     cls_id   = np.array([strack.class_id for strack in tracked_stracks]).astype("int")[:, None]
