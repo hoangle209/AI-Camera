@@ -168,7 +168,7 @@ class LicensePlatePoseDetection(BaseModule):
             count_plate += 1
             results.append([id, txt_result, [x1, y1, x2, y2], [], [], []])
 
-        return results, cropped_img
+        return results
     
 
     def detect_license_plate_and_ocr(self, batch):
@@ -180,7 +180,7 @@ class LicensePlatePoseDetection(BaseModule):
         
         final_result = []
         for result_det, raw_im in zip(results_det_post, batch):
-            res, cropped_im = self.reg_plate(raw_im, result_det)
+            res = self.reg_plate(raw_im, result_det)
             final_result.append(res)
         
         return final_result
