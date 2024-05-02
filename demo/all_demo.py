@@ -32,4 +32,4 @@ if __name__ == "__main__":
     while True:
         ab_ret = ab(dummy) # True hoac False 
         speed_ret = speed_est(dummy) # list cac box | list string toc do | {tid: box, speed} 
-        lost = ai_lost.run(dummy) # {tid, box}
+        lost = ai_lost.run(dummy) # {tid: box}
