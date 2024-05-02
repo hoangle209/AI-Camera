@@ -71,9 +71,9 @@ class SpeedEstimation(BaseModule):
                 coordinate_end = self.coordinates[t_id][0]
                 distance = abs(coordinate_start - coordinate_end)
                 time = len(self.coordinates[t_id]) / self.fps
-                speed = distance / time * 3.6
-                labels.append(f"#{t_id} {int(speed)} km/h")
-                speed[f"{t_id}"] = (tracklet[:4], int(speed))
+                obj_speed = distance / time * 3.6
+                labels.append(f"#{t_id} {int(obj_speed)} km/h")
+                speed[f"{t_id}"] = (tracklet[:4], int(obj_speed))
 
         return tracklets, labels, speed
     
