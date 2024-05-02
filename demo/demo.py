@@ -25,12 +25,13 @@ if __name__ == "__main__":
     ai_lost = AILost("configs/ai_lost_items.yaml")
     # coco = COCODetection("configs/ai_lost_items.yaml")
     ai_lost.setup_management_region(POINTS)
-    cap = cv2.VideoCapture("192.168.6.254_ch3_20240424172551_20240424173407.mp4")
+    cap = cv2.VideoCapture("video/192.168.6.254_ch3_20240424172551_20240424173407.mp4")
     
-    cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
-    cv2.resizeWindow("frame", 1000, 700) 
+    # cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
+    # cv2.resizeWindow("frame", 1000, 700) 
     points = np.array(POINTS).astype(np.int32)
 
+    c = 0
     while True:
         suc, frame = cap.read()
         if not suc:
@@ -46,16 +47,21 @@ if __name__ == "__main__":
         #                 1, (0,255, 0), 2, cv2.LINE_AA)
 
         rets = ai_lost.run(frame)
-        for tid in rets:
-            x1, y1, x2, y2 = rets[tid]
-            cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 4)
+        if len(rets) > 0:
+            for tid in rets:
+                x1, y1, x2, y2 = rets[tid]
+                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 4)
+            cv2.imwrite(f"results/{c}.jpg", frame)
+            print(rets)
+        print(c)
+        c+=1
 
         # ret = coco(frame)[0]
-        # print(ret)
+        
     
-        cv2.imshow("frame", frame)
-        if cv2.waitKey(1) & 0xff == 27:
-            break
+        # cv2.imshow("frame", frame)
+        # if cv2.waitKey(1) & 0xff == 27:
+        #     break
     
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 

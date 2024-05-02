@@ -83,7 +83,7 @@ class LicensePlatePoseDetection(BaseModule):
 
         plate_boxes = [boxes_[:, :5].tolist() for boxes_ in boxes]
 
-        dets = [np.concatenate([plate_box, plate_point], axis=1) \
+        dets = [np.concatenate([plate_box, plate_point], axis=1) if len(plate_box) > 0 else [] \
                         for (plate_box, plate_point) in zip(plate_boxes, plate_points)]
         
         results_post = []

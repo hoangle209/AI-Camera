@@ -1,11 +1,11 @@
 detection:
   model  : "yolov8"
-  weight : "weights\\yolov8l.pt"
+  weight : "weights/yolov8l.pt"
   imgsz  : [640,640]
   conf   : 0.25
   classes: [0,24,25,26,28,67]
   verbose: False
-  device : "cuda"
+  device : "cpu"
   kwargs : null 
 
 
