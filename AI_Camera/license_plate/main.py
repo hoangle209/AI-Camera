@@ -117,6 +117,7 @@ class LicensePlatePoseDetection(BaseModule):
             ]
 
             x1, y1, x2, y2 = box_kps[0]
+            conf = box_kps[-1]
             # count_kp = 0
             bbox = box_kps[0]
             kpt = kps
@@ -166,7 +167,7 @@ class LicensePlatePoseDetection(BaseModule):
             #     dt_boxes, _ = self.text_detector(img)
             
             count_plate += 1
-            results.append([id, txt_result, [x1, y1, x2, y2], [], [], []])
+            results.append([id, txt_result, [x1, y1, x2, y2, conf], [], [], []])
 
         return results
     

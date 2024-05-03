@@ -3,7 +3,7 @@ detection:
   weight : "weights/yolov8s.pt"
   imgsz  : [640,640]
   conf   : 0.25
-  classes: [0,]
+  classes: null
   verbose: False
   device : "cpu"
   kwargs : null 
