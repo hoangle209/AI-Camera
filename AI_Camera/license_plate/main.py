@@ -21,6 +21,7 @@ class LicensePlatePoseDetection(BaseModule):
     def __init__(self, config) -> None:
         super().__init__(config)
         self.args = utility.parse_args()
+        self.args.use_gpu = self.cfg.OCR.use_gpu
         self.MODE_REC = self.cfg.OCR.MODE_REC  # mode recognition
         self.MODE_DET = self.cfg.OCR.MODE_DET  # mode detect text
         self.MODE_SYS = self.cfg.OCR.MODE_SYS  # mode both recognition and detect text
