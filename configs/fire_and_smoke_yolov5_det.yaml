@@ -5,5 +5,5 @@ detection:
   conf   : 0.65
   classes: [0,1]
   verbose: False
-  device : "cpu"
+  device : "cuda"
   kwargs : null 

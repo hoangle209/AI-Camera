@@ -27,8 +27,8 @@ if __name__ == "__main__":
     ai_lost.setup_management_region(POINTS)
     cap = cv2.VideoCapture("video/192.168.6.254_ch3_20240424172551_20240424173407.mp4")
     
-    # cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
-    # cv2.resizeWindow("frame", 1000, 700) 
+    cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
+    cv2.resizeWindow("frame", 1000, 700) 
     points = np.array(POINTS).astype(np.int32)
 
     c = 0

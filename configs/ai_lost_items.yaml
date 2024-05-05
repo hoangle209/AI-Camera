@@ -5,7 +5,7 @@ detection:
   conf   : 0.25
   classes: [0,24,25,26,28,67]
   verbose: False
-  device : "cpu"
+  device : "cuda"
   kwargs : null 
 
 
@@ -20,8 +20,8 @@ track:
 
 
 checker:
-  track_history_len: 10
-  is_not_moving_checker_len: 30 # frames
-  is_moving_threshold: 5
+  track_history_len: 15 # frames
+  is_not_moving_checker_len: 45 # frames
+  is_moving_threshold: 5 # in pixel
 
   
