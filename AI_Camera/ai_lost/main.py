@@ -2,6 +2,7 @@ from collections import defaultdict, deque
 import numpy as np
 import time
 from copy import deepcopy
+import cv2
 
 from AI_Camera.core.main import BaseModule
 
@@ -34,6 +35,30 @@ def point_in_polygon(point, polygon):
 
     return inside
 
+class ViewTransformer:
+    def __init__(self, source: np.ndarray) -> None:
+        self.m = self.cal_transform_matrix(source)
+
+    def cal_transform_matrix(self, source):
+        x1 = np.min(source[:, 0])
+        x2 = np.max(source[:, 0])
+        y1 = np.min(source[:, 1])
+        y2 = np.max(source[:, 1])
+
+        new_source = np.array([(x1, y1), (x1, y2), (x2, y2), (x2, y1)], dtype=np.float32)
+        target = np.array([(0, 0), (x2-x1, 0), (x2-x1, y2-y1), (0, y2-y1)], dtype=np.float32)
+        m = cv2.getPerspectiveTransform(new_source, target)
+
+        return m
+
+    def transform_points(self, points: np.ndarray) -> np.ndarray:
+        if points.size == 0:
+            return points
+
+        reshaped_points = points.reshape(-1, 1, 2).astype(np.float32)
+        transformed_points = cv2.perspectiveTransform(reshaped_points, self.m)
+        return transformed_points.reshape(-1, 2)
+
 
 class AILost(BaseModule):
     def __init__(self, config) -> None:
@@ -49,10 +74,14 @@ class AILost(BaseModule):
     
 
     def setup_management_region(self, points):
+        points = np.array(points).astype(np.float32)
+        self.vt = ViewTransformer(points)
+        bird_view_manage_region = self.vt.transform_points(points)
         self.manage_region = []
-        for point in points:
-            self.manage_region.append(Point(point[0], point[1]))    
-         
+
+        for point in bird_view_manage_region:
+            self.manage_region.append(Point(point[0], point[1]))
+
 
     def check_inside_region(self, point):
         return point_in_polygon(Point(point[0], point[1]), self.manage_region)
@@ -68,9 +97,10 @@ class AILost(BaseModule):
             bottom_center_points = np.concatenate(
                                     [(tracklets[:, 0:1] + tracklets[:, 2:3]) / 2,
                                       tracklets[:, 3:4]], axis=1)
+            bottom_center_points = self.vt.transform_points(bottom_center_points)
 
             for i, track_ in enumerate(tracklets):
-                if track_[-2] == 0:
+                if track_[-2] == 0: # if class is person
                     is_inside_management_region = self.check_inside_region(bottom_center_points[i])
                     if is_inside_management_region:
                         self.is_any_person = True
@@ -84,7 +114,6 @@ class AILost(BaseModule):
     def find_lost_objects(self):
         abandon_objects_dict = {}
         for (tid, track_hist) in self.tracklets_history.items():
-            print("len", tid, len(track_hist))
             if len(track_hist) < self.cfg.checker.track_history_len:
                 continue
 
@@ -120,12 +149,15 @@ class AILost(BaseModule):
         for tid in list(self.last_appear.keys()):
             last_time = self.last_appear[tid]
 
-            if (current_time - last_time) > 3: # in second
+            if (current_time - last_time) > 10: # in second
                 del self.last_appear[tid]
                 del self.tracklets_history[tid]
 
                 if tid in self.is_not_moving_history:
                     del self.is_not_moving_history[tid]
+                
+                if tid in self.is_lost:
+                    del self.is_lost[tid]
     
 
     def run(self, image):

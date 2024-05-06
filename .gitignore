@@ -2,6 +2,9 @@
 *.pt
 *.pth
 *.mp4
+*.avi
+*.jpg
+*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

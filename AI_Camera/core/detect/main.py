@@ -24,11 +24,12 @@ class Detectors:
                 self.model = YOLO(weight)
 
             self.kwargs_ = {
-                "imgsz"  : self.cfg["imgsz"],
-                "conf"   : self.cfg["conf"],
-                "classes": self.cfg["classes"],
-                "verbose": self.cfg["verbose"],
-                "device" : self.cfg["device"],
+                "imgsz"       : self.cfg["imgsz"],
+                "conf"        : self.cfg["conf"],
+                "classes"     : self.cfg["classes"],
+                "verbose"     : self.cfg["verbose"],
+                "device"      : self.cfg["device"],
+                "agnostic_nms": True
             }
         else:
             logger.error(f"Model type {model} is not supported !!!")
