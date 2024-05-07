@@ -246,22 +246,22 @@ def mode_det():
     pass
 
 
-def check_format_plate(lp):
-    """
-    lp: text plate
-    return: True or False
-    """
-    plate_format1 = compile("^[0-9]{2}[A-Z]{1}[0-9]{4}$")
-    plate_format2 = compile("^[0-9]{2}[A-Z]{1}[0-9]{5}$")
-    plate_format3 = compile("^[0-9]{2}[A-Z]{1}[0-9]{6}$")
-    plate_format4 = compile("^[0-9]{2}[A-Z]{1}[0-9]{3}\.[0-9]{2}$")
-    return (
-        plate_format1.match(lp) is not None
-        or plate_format2.match(lp) is not None
-        or plate_format3.match(lp) is not None
-        or plate_format4.match(lp) is not None
+# def check_format_plate(lp):
+#     """
+#     lp: text plate
+#     return: True or False
+#     """
+#     plate_format1 = compile("^[0-9]{2}[A-Z]{1}[0-9]{4}$")
+#     plate_format2 = compile("^[0-9]{2}[A-Z]{1}[0-9]{5}$")
+#     plate_format3 = compile("^[0-9]{2}[A-Z]{1}[0-9]{6}$")
+#     plate_format4 = compile("^[0-9]{2}[A-Z]{1}[0-9]{3}\.[0-9]{2}$")
+#     return (
+#         plate_format1.match(lp) is not None
+#         or plate_format2.match(lp) is not None
+#         or plate_format3.match(lp) is not None
+#         or plate_format4.match(lp) is not None
 
-    )
+#     )
 
 
 def check_format_plate_append(lp):
@@ -272,7 +272,7 @@ def check_format_plate_append(lp):
     plate_format1 = compile("^[0-9]{2}[A-Z]{1}[0-9]{4}$")
     plate_format2 = compile("^[0-9]{2}[A-Z]{1}[0-9]{5}$")
     plate_format3 = compile("^[0-9]{2}[A-Z]{1}[0-9]{6}$")
-    plate_format4 = compile("^[0-9]{2}[A-Z]{1}[0-9]{3}\.[0-9]{2}$")
+    plate_format4 = compile("^[0-9]{2}[A-Z]{1}[0-9]{3}[0-9]{2}$")
     if plate_format1.match(lp) is not None:
         lp += "##"
         return lp
@@ -284,10 +284,23 @@ def check_format_plate_append(lp):
         return lp
     if plate_format3.match(lp) is not None:
         return lp
-    if (lp[0].isdigit() or lp[0].isalpha()) and lp[1].isdigit() and lp[2].isdigit():
-        lp = lp[1:]
-        return lp
+    
     return None
+
+def check_format_plate(lp):
+    """
+    lp: text plate
+    return: True or False
+    """
+    plate_format_regular  = compile("^[0-9]{2}[ABCDEFGHIJKLMNOPQRSTUVWXYZĐ]{1,2}([0-9]{4,5}|[0-9]{6})$")
+    plate_format_special  = compile("^[0-9]{4,5}[A-Z]{2}[0-9]{2,3}$")
+    plate_format_temporal = compile("^[A-Z]{0,1}[0-9]{6,7}")
+
+    check = (plate_format_regular.match(lp) is not None) | \
+            (plate_format_special.match(lp) is not None) | \
+            (plate_format_temporal.match(lp) is not None)
+
+    return check
 
 
 def show_multi_cam(buffer_frames, buffer_imgs):

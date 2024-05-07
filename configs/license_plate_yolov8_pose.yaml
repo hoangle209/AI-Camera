@@ -18,4 +18,4 @@ OCR:
   MODE_REC: True
   MODE_DET: True
   MODE_SYS: False
-  use_gpu : True
+  use_gpu : False

@@ -1,6 +1,6 @@
 detection:
   model  : "yolov8"
-  weight : "weights/yolov8s.pt"
+  weight : "weights/yolov8m.pt"
   imgsz  : [640,640]
   conf   : 0.25
   classes: [0,]

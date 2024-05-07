@@ -22,32 +22,61 @@ POINTS = [(1400, 249),
 POINTS = [(364, 244), (248, 477), (921,544), (971,329)]
 
 if __name__ == "__main__":
-    ai_lost = AILost("configs/ai_lost_items.yaml")
-    coco = COCODetection("configs/default.yaml")
-    ai_lost.setup_management_region(POINTS)
-    cap = cv2.VideoCapture("video/192.168.6.254_ch3_20240424172551_20240424173407.mp4")
+    # ai_lost = AILost("configs/ai_lost_items.yaml")
+    # coco = COCODetection("configs/default.yaml")
+    # ai_lost.setup_management_region(POINTS)
     
-    cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
-    cv2.resizeWindow("frame", 1000, 700) 
+    model = SpeedEstimation("configs/yolov8_bytetrack.yaml")
+
+    cap = cv2.VideoCapture("video/vlc-record-2024-05-06-13h40m59s-192.168.6.254_ch2_20240504164354_20240504170023.mp4-.mp4")
+    frame_width = int(cap.get(3)) 
+    frame_height = int(cap.get(4)) 
+   
+    size = (frame_width, frame_height)
+    
+    # cv2.namedWindow("frame", cv2.WINDOW_NORMAL) 
+    # cv2.resizeWindow("frame", 1000, 700) 
     points = np.array(POINTS).astype(np.int32)
 
-    c = 0
-    while True:
-        suc, frame = cap.read()
-        if not suc:
-            break
-        cv2.polylines(frame, [points], True, (0, 255, 0), 2)
-        
-        dets = coco.detector.do_detect(frame)[0]
-        # dets = ai_lost.tracker.do_track(dets=dets)
-        for det in dets:
-            print(det)
-            x1, y1, x2, y2 = det[:4]
-            print(type(x1))
-            cv2.rectangle(frame, (x1,y1), (x2, y2), (0, 0, 255), 2)
+    writer = cv2.VideoWriter("out.avi", cv2.VideoWriter_fourcc(*'MJPG'),
+                             30, size)
 
-            # cv2.putText(frame, f'{det[-1]}-{det[-2]}', (int(x1), int(y1+10)), cv2.FONT_HERSHEY_SIMPLEX,  
-            #             1, (0,255, 0), 2, cv2.LINE_AA)
+    c = 0
+    try:
+        while True:
+            suc, frame = cap.read()
+            if not suc:
+                break
+            # cv2.polylines(frame, [points], True, (0, 255, 0), 2)
+            
+            _, _, rets = model(frame)
+            # for tid in rets:
+            #     print(tid, rets[tid])
+            print("######################################")
+            if len(rets) > 0:
+                for tid in rets:
+                    print(tid, rets[tid])
+                    # print("######################################")
+
+                    det, s = rets[tid]
+                    # det[det<0] = 0 
+                    (x1, y1, x2, y2) = det
+                    cv2.rectangle(frame, (int(x1),int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
+
+                    cv2.putText(frame, f"{s}", (int(x1), int(y2)),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 1, cv2.LINE_AA)
+
+                writer.write(frame)
+            
+            # c+=1
+            # if c > 2000:
+            #     break
+    except KeyboardInterrupt:
+        print('Stopped by keyboard interrupt')
+    writer.release()
+
+            
+        #     print(rets)
  
 
         # rets = ai_lost.run(frame)

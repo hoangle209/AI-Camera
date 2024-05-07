@@ -157,11 +157,11 @@ class LicensePlatePoseDetection(BaseModule):
                 result_format_check = check_format_plate(txt_result)
                 # result_format_check = True
 
-                txt_result = check_format_plate_append(
-                    txt_result
-                )  # return lp + '#' or None
+                # txt_result = check_format_plate_append(
+                #     txt_result
+                # )  # return lp + '#' or None
 
-                if txt_result == None:
+                if not check_format_plate(txt_result):
                     continue
 
             # if self.MODE_DET:
