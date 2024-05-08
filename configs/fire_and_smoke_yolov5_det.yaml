@@ -1,9 +1,21 @@
 detection:
   model  : "yolov5"
-  weight : "weights/fire_and_smoke.pt"
+  weight : "weights/fire_and_smoke_v5l.pt"
   imgsz  : [640,640]
   conf   : 0.65
   classes: [0,1]
   verbose: False
   device : "cuda"
   kwargs : null 
+
+track:
+  model: "byte_track"
+  kwargs:
+    frame_rate: 30
+    track_thresh: 0.25
+    track_buffer: 20
+    match_thresh: 0.7 # higher match thresh means more objects are matched
+    mot20: False
+
+inspector:
+  confirm_thresh: 30 # in frames

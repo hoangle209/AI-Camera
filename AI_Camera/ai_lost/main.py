@@ -1,39 +1,40 @@
 from collections import defaultdict, deque
 import numpy as np
 import time
-from copy import deepcopy
 import cv2
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 from AI_Camera.core.main import BaseModule
 
 
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+# class Point:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
 
-# Checking if a point is inside a polygon
-def point_in_polygon(point, polygon):
-    """https://www.geeksforgeeks.org/how-to-check-if-a-given-point-lies-inside-a-polygon/
-    """
-    num_vertices = len(polygon)
-    x, y = point.x, point.y
-    inside = False
+# # Checking if a point is inside a polygon
+# def point_in_polygon(point, polygon):
+#     """https://www.geeksforgeeks.org/how-to-check-if-a-given-point-lies-inside-a-polygon/
+#     """
+#     num_vertices = len(polygon)
+#     x, y = point.x, point.y
+#     inside = False
 
-    p1 = polygon[0]
+#     p1 = polygon[0]
 
-    for i in range(1, num_vertices + 1):
-        p2 = polygon[i % num_vertices]
+#     for i in range(1, num_vertices + 1):
+#         p2 = polygon[i % num_vertices]
 
-        if y > min(p1.y, p2.y):
-            if y <= max(p1.y, p2.y):
-                if x <= max(p1.x, p2.x):
-                    x_intersection = (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y) + p1.x
-                    if p1.x == p2.x or x <= x_intersection:
-                        inside = not inside
-        p1 = p2
+#         if y > min(p1.y, p2.y):
+#             if y <= max(p1.y, p2.y):
+#                 if x <= max(p1.x, p2.x):
+#                     x_intersection = (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y) + p1.x
+#                     if p1.x == p2.x or x <= x_intersection:
+#                         inside = not inside
+#         p1 = p2
 
-    return inside
+#     return inside
 
 class ViewTransformer:
     def __init__(self, source: np.ndarray) -> None:
@@ -80,11 +81,13 @@ class AILost(BaseModule):
         self.manage_region = []
 
         for point in bird_view_manage_region:
-            self.manage_region.append(Point(point[0], point[1]))
+            self.manage_region.append((point[0], point[1]))
+        self.manage_region = Polygon(self.manage_region)
 
 
     def check_inside_region(self, point):
-        return point_in_polygon(Point(point[0], point[1]), self.manage_region)
+        point = Point(point[0], point[1])
+        return self.manage_region.contains(point)
     
 
     def track_proposal_lost_object(self, image):
@@ -106,9 +109,10 @@ class AILost(BaseModule):
                         self.is_any_person = True
                 elif track_[-2] != 0: 
                     is_inside_management_region = self.check_inside_region(bottom_center_points[i])
-                    tid = track_[-1]
-                    self.tracklets_history[tid].append((track_[:4], bottom_center_points[i]))
-                    self.last_appear[tid] = time.time()
+                    if is_inside_management_region:
+                        tid = track_[-1]
+                        self.tracklets_history[tid].append((track_[:4], bottom_center_points[i]))
+                        self.last_appear[tid] = time.time()
 
 
     def find_lost_objects(self):
