@@ -22,11 +22,11 @@ POINTS = [(1400, 249),
 POINTS = [(364, 244), (248, 477), (921,544), (971,329)]
 
 if __name__ == "__main__":
-    # ai_lost = AILost("configs/ai_lost_items.yaml")
-    # coco = COCODetection("configs/default.yaml")
-    # ai_lost.setup_management_region(POINTS)
+    ai_lost = AILost("configs/ai_lost_items.yaml")
+    coco = COCODetection("configs/default.yaml")
+    ai_lost.setup_management_region(POINTS)
     
-    model = SpeedEstimation("configs/yolov8_bytetrack.yaml")
+    speed = SpeedEstimation("configs/yolov8_bytetrack.yaml")
 
     cap = cv2.VideoCapture("video/vlc-record-2024-05-06-13h40m59s-192.168.6.254_ch2_20240504164354_20240504170023.mp4-.mp4")
     frame_width = int(cap.get(3)) 
@@ -49,13 +49,11 @@ if __name__ == "__main__":
                 break
             # cv2.polylines(frame, [points], True, (0, 255, 0), 2)
             
-            _, _, rets = model(frame)
-            # for tid in rets:
-            #     print(tid, rets[tid])
-            print("######################################")
+            _, _, rets = speed(frame)
+
             if len(rets) > 0:
                 for tid in rets:
-                    print(tid, rets[tid])
+                    # print(tid, rets[tid])
                     # print("######################################")
 
                     det, s = rets[tid]
@@ -68,9 +66,7 @@ if __name__ == "__main__":
 
                 writer.write(frame)
             
-            # c+=1
-            # if c > 2000:
-            #     break
+            c+=1
     except KeyboardInterrupt:
         print('Stopped by keyboard interrupt')
     writer.release()
