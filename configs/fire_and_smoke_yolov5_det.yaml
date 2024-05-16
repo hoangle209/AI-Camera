@@ -1,6 +1,6 @@
 detection:
   model  : "yolov5"
-  weight : "weights/5s_14_5_10h6.pt"
+  weight : "weights/best(1).pt"
   imgsz  : [640,640]
   conf   : 0.25
   classes: null
@@ -24,9 +24,9 @@ inspector:
   tolerance: 15
   variation_thresh: 0.15
 
-use_slicer: False
+use_slicer: True
 
 slicer:
-  slice_wh: [320,320]
-  overlap_ratio_wh: [0.,0.]
+  slice_wh: [640,640]
+  overlap_ratio_wh: [0.2,0.2]
   iou_threshold: 0.5

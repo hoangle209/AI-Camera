@@ -73,6 +73,7 @@ class FireSmokeDetection(BaseModule):
 
     
     def confirm_fire_and_smoke_by_sim_track(self, dets):
+        dets = dets[0]
         _, areas, bboxes = self.sim_track.tracking(dets)
         outs = []
         for tid in areas:
@@ -82,7 +83,7 @@ class FireSmokeDetection(BaseModule):
             if not consistance:
                 outs.append(bboxes[tid])
         
-        return outs
+        return [outs]
         
 
     # def confirm_fire_and_smoke_by_track(self, dets):
