@@ -1,9 +1,9 @@
 detection:
   model  : "yolov5"
-  weight : "weights/fire_and_smoke_v5l.pt"
+  weight : "weights/5s_14_5_10h6.pt"
   imgsz  : [640,640]
-  conf   : 0.65
-  classes: [0,1]
+  conf   : 0.25
+  classes: null
   verbose: False
   device : "cuda"
   kwargs : null 
@@ -18,4 +18,15 @@ track:
     mot20: False
 
 inspector:
-  confirm_thresh: 30 # in frames
+  confirm_thresh: 10 # in frames
+  max_euclidean_distance: 40
+  window_size: 20
+  tolerance: 15
+  variation_thresh: 0.15
+
+use_slicer: False
+
+slicer:
+  slice_wh: [320,320]
+  overlap_ratio_wh: [0.,0.]
+  iou_threshold: 0.5

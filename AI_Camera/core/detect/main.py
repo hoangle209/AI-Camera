@@ -19,7 +19,22 @@ class Detectors:
 
         if model in ["yolov5", "yolov8"]:
             if model == "yolov5":
-                self.model = torch.hub.load('ultralytics/yolov5', 'custom', path=weight)
+                try:
+                    self.model = torch.hub.load('ultralytics/yolov5', 
+                                                'custom', 
+                                                path=weight, 
+                                                force_reload=True,
+                                                _verbose=False)
+                except:
+                    import pathlib
+                    temp = pathlib.PosixPath
+                    pathlib.PosixPath = pathlib.WindowsPath
+                    self.model = torch.hub.load('ultralytics/yolov5', 
+                                                'custom', 
+                                                path=weight, 
+                                                force_reload=True,
+                                                _verbose=False)
+
             elif model == "yolov8":
                 self.model = YOLO(weight)
 
