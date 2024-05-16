@@ -1,7 +1,6 @@
 import datetime
 from typing import Any
 import numpy as np
-from third_parties.license_plate.sort.sort import Sort
 
 from AI_Camera.core.main import BaseModule
 from third_parties.license_plate.PaddleOCR.tools.infer.include_align import (
@@ -15,6 +14,7 @@ from third_parties.license_plate.PaddleOCR.tools.infer.predict_det import TextDe
 from third_parties.license_plate.PaddleOCR.tools.infer.predict_rec import TextRecognizer
 from third_parties.license_plate.PaddleOCR.tools.infer.predict_system import TextSystem
 import third_parties.license_plate.PaddleOCR.tools.infer.utility as utility
+from third_parties.license_plate.sort.sort import Sort
 
 from AI_Camera.utils import get_pylogger
 logger = get_pylogger()
@@ -90,14 +90,14 @@ class LicensePlatePoseDetection(BaseModule):
 
         dets = [np.concatenate([plate_box, plate_point], axis=1) if len(plate_box) > 0 else [] \
                         for (plate_box, plate_point) in zip(plate_boxes, plate_points)]
-        print("*************dets", dets)
+        # print("*************dets", dets)
         results_post = []
         if check_sort:
             dets_to_sort = np.empty((0, 16))
             for det_2dim in dets:
                 result_post = []
                 for det in det_2dim:
-                    print("*************det", det)
+                    # print("*************det", det)
                     if det[4] < self.vis_thresh:
                         continue
                     conf = float(det[4])
@@ -138,8 +138,7 @@ class LicensePlatePoseDetection(BaseModule):
                 [kps_int[0], kps_int[1]],
                 [kps_int[2], kps_int[3]],
                 [kps_int[6], kps_int[7]],
-                [kps_int[8], kps_int[9]],
-                
+                [kps_int[8], kps_int[9]], 
             ]
 
             x1, y1, x2, y2 = box_kps[0]
@@ -175,7 +174,6 @@ class LicensePlatePoseDetection(BaseModule):
                 img = cropped_img
                 img_list = [cropped_img]
             
-
             if self.MODE_REC:
                 rec_res, _ = self.text_recognizer(img_list)
                 txt_result, check_acc, arv_acc = mode_rec(rec_res, self.threshold)
@@ -223,6 +221,8 @@ class LicensePlatePoseDetection(BaseModule):
 
         now = datetime.datetime.now()
         return [[id, lp_ret, list_lp_old[0][2], [], [], []]]
+    
+
     def detect_license_plate_and_ocr(self, batch):
         results_det = self.detector.do_detect(batch)
         results_det_post = self.post_process_kpts(results_det, check_sort=True)
