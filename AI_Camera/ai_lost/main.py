@@ -4,6 +4,7 @@ import time
 import cv2
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
+from omegaconf import OmegaConf
 
 from AI_Camera.core.main import BaseModule
 
@@ -72,6 +73,9 @@ class AILost(BaseModule):
         self.last_appear = defaultdict(int)
         self.is_lost = defaultdict(lambda: False)
         self.is_any_person = False
+
+        points = OmegaConf.to_object(self.cfg.points)
+        self.setup_management_region(points)
     
 
     def setup_management_region(self, points):

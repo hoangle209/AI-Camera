@@ -24,7 +24,7 @@ inspector:
   tolerance: 15
   variation_thresh: 0.15
 
-use_slicer: True
+use_slicer: False
 
 slicer:
   slice_wh: [320,320]

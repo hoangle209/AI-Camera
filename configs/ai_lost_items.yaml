@@ -24,4 +24,6 @@ checker:
   is_not_moving_checker_len: 45 # frames
   is_moving_threshold: 15 # in pixel
 
+points: [[364, 244], [248, 777], [1321,844], [1371,329]]
+
   

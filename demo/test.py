@@ -18,10 +18,10 @@ if __name__ == "__main__":
     cv2.resizeWindow("frame", 1000, 700) 
 
     # POINTS = [(364, 244), (248, 477), (921,544), (971,329)]
-    POINTS = [(364, 244), (248, 777), (921,844), (971,329)]
+    POINTS = [(364, 244), (248, 777), (1321,844), (1371,329)]
     points = np.array(POINTS).astype(np.int32)
     ai_lost = AILost("configs/ai_lost_items.yaml")
-    ai_lost.setup_management_region(POINTS)
+    # ai_lost.setup_management_region(POINTS)
 
     # lp = LicensePlatePoseDetection("configs/license_plate_yolov8_pose.yaml")
 
