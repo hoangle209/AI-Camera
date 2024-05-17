@@ -22,6 +22,6 @@ track:
 checker:
   track_history_len: 15 # frames
   is_not_moving_checker_len: 45 # frames
-  is_moving_threshold: 5 # in pixel
+  is_moving_threshold: 15 # in pixel
 
   

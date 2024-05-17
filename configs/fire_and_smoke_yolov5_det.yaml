@@ -1,6 +1,6 @@
 detection:
   model  : "yolov5"
-  weight : "weights/best(1).pt"
+  weight : "weights/fire_and_smoke.pt"
   imgsz  : [640,640]
   conf   : 0.25
   classes: null
@@ -27,6 +27,6 @@ inspector:
 use_slicer: True
 
 slicer:
-  slice_wh: [640,640]
+  slice_wh: [320,320]
   overlap_ratio_wh: [0.2,0.2]
   iou_threshold: 0.5

@@ -93,6 +93,8 @@ class AILost(BaseModule):
     def track_proposal_lost_object(self, image):
         dets = self.detector.do_detect(image)[0]
         tracklets = self.tracker.do_track(dets=dets)
+
+        self.tracklets = tracklets
         
         self.is_any_person = False
 
@@ -113,11 +115,13 @@ class AILost(BaseModule):
                         tid = track_[-1]
                         self.tracklets_history[tid].append((track_[:4], bottom_center_points[i]))
                         self.last_appear[tid] = time.time()
-
+                        
 
     def find_lost_objects(self):
         abandon_objects_dict = {}
-        for (tid, track_hist) in self.tracklets_history.items():
+        for track in self.tracklets:
+            tid = track[-1]
+            track_hist = self.tracklets_history[tid]
             if len(track_hist) < self.cfg.checker.track_history_len:
                 continue
 
@@ -128,8 +132,6 @@ class AILost(BaseModule):
                 self.is_not_moving_history[tid].append(1)
             else:
                 self.is_not_moving_history[tid].append(0)
-            
-            # print(tid, sum(self.is_not_moving_history[tid]))
 
             if len(self.is_not_moving_history[tid]) == self.cfg.checker.is_not_moving_checker_len:
                 point_ = sum(self.is_not_moving_history[tid])
@@ -139,9 +141,8 @@ class AILost(BaseModule):
                         if not self.is_lost[tid]:
                             self.is_lost[tid] = True
                         abandon_objects_dict[tid] = track_hist[-1][0]
-                    else:
-                        if self.is_lost[tid]:
-                            abandon_objects_dict[tid] = track_hist[-1][0]
+                    elif self.is_lost[tid]:
+                        abandon_objects_dict[tid] = track_hist[-1][0]
                 else:
                     self.is_lost[tid] = False
 
@@ -166,8 +167,8 @@ class AILost(BaseModule):
 
     def run(self, image):
         self.track_proposal_lost_object(image)
-        self.remove_disappeared_objects()
         abandon_dict = self.find_lost_objects()
+        self.remove_disappeared_objects()
 
         return abandon_dict
 

@@ -48,7 +48,7 @@ def remap(rets, num, insz=(640,640)):
 if __name__ == "__main__":
     model = FireSmokeDetection("configs/fire_and_smoke_yolov5_det.yaml")
 
-    cap = cv2.VideoCapture("videos\\fire1.mp4")
+    cap = cv2.VideoCapture("videos\\fire3.mp4")
 
     # frame_width = int(cap.get(3)) 
     # frame_height = int(cap.get(4)) 
@@ -66,13 +66,13 @@ if __name__ == "__main__":
             if not suc:
                 break
 
-            dets = model([frame])[0]
+            dets = model([frame])
             # print("first round: ", dets)
-            dets = model.confirm_fire_and_smoke_by_sim_track(dets)
+            # dets = model.confirm_fire_and_smoke_by_sim_track(dets)
             # print("second round: ", dets)
             # print("-------------------------------------------------------")
 
-
+            dets = dets[0]
             if len(dets) > 0:
                 for det in dets:
                     x1, y1, x2, y2, conf, cls_id = det
